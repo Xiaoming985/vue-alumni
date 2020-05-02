@@ -95,6 +95,7 @@ export default {
         type: 'warning'
       }).then(async () => {
         await this.$http.logout();
+        this.$router.push("/");
         this.$message.success('退出成功!');
       }).catch(() => {
         this.$message.error('已取消退出!');        
