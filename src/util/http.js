@@ -59,7 +59,7 @@ instance.interceptors.response.use(res=>{
     //请求成功
     return res.data
 },()=>{
-  return res.data
+  // return res.data
 })
 
 export default http

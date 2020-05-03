@@ -89,6 +89,14 @@ const ALUMNI_API = {
   deleteLeave: {
     method: 'post',
     url: '/leaveController/deleteLeave'
+  },
+  getLog: {
+    method: 'get',
+    url: '/logController/getLog'
+  },
+  deleteLog: {
+    method: 'post',
+    url: '/logController/deleteLog'
   }
 }
 

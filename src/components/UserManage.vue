@@ -2,10 +2,11 @@
   <div>
     <div class="handle-box">
       <el-select clearable size="small" v-model="select" placeholder="请选择" class="handle-select mr10">
-        <el-option key="1" label="按用户名" value="1"></el-option>
-        <el-option key="2" label="按手机号" value="2"></el-option>
+        <el-option key="1" label="按姓名" value="1"></el-option>
+        <el-option key="2" label="按用户名" value="2"></el-option>
+        <el-option key="3" label="按手机号" value="3"></el-option>
       </el-select>
-      <el-input clearable size="small" v-model="input" placeholder="根据账号或者用户名查找用户" class="handle-input mr10"></el-input>
+      <el-input clearable size="small" v-model="input" placeholder="根据账号/用户名/姓名查找用户" class="handle-input mr10"></el-input>
       <el-button size="small" type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
     </div>
     <Condition ref="condition"></Condition>
@@ -40,6 +41,7 @@
       <el-table-column align="center" sortable prop="schoolName" label="学校" width="120"></el-table-column>
       <el-table-column align="center" sortable prop="grade" label="年级" width="80"></el-table-column>
       <el-table-column align="center" sortable prop="className" label="班级" width="80"></el-table-column>
+      <el-table-column align="center" prop="userName" label="用户名" width="80"></el-table-column>
       <el-table-column align="center" prop="gender" label="性别" width="80" 
         :filters="[{ text: '男', value: '男' }, { text: '女', value: '女' }]"
         :filter-method="filterGender"
@@ -115,7 +117,6 @@ export default {
       select: '', // 选择条件进行搜索
       input: '', // 输入框的搜索条件
       radio: '', // 选择的认证状态
-      userInfo: {}, // 
       tableData: [], // 表格数据源
       selectedData: [], // 批量选择框
       currentPage: 1,
@@ -145,16 +146,19 @@ export default {
   },
   methods: {
     handleSearch() { // 搜索按钮
+      let userInfo = {};
       if(this.select == 1){
-        this.userInfo.name = this.input.trim();
+        userInfo.name = this.input.trim();
       } else if(this.select == 2){
-        this.userInfo.phone = this.input.trim();
+        userInfo.userName = this.input.trim();
+      } else if(this.select == 3){
+        userInfo.phone = this.input.trim();
       }
-      this.userInfo.schoolId = this.$refs.condition.school; // 获取子组件的值
-      this.userInfo.grade = this.$refs.condition.grade;
-      this.userInfo.classId = this.$refs.condition.cla;
-      this.userInfo.tag = this.radio;
-      this.getUserInfo(this.userInfo);
+      userInfo.schoolId = this.$refs.condition.school; // 获取子组件的值
+      userInfo.grade = this.$refs.condition.grade;
+      userInfo.classId = this.$refs.condition.cla;
+      userInfo.tag = this.radio;
+      this.getUserInfo(userInfo);
     },
     filterGender(value, row) { // 筛选男女
       return row.gender === value;
