@@ -79,6 +79,7 @@ export default {
       this.editForm = [];
       this.editVisible = true;
     },
+    // 批量删除
     batchDelete() {
 
     },
@@ -90,11 +91,30 @@ export default {
       this.editForm = row;
       this.editVisible = true;
     },
-    saveEdit() {
-      
+    async saveEdit() {
+      this.editVisible = false;
+      let res = await this.$http.updateSchool(this.$qs.stringify({
+        schoolId: this.editForm.schoolId,
+        schoolName: this.editForm.schoolName,
+        schoolYear: this.editForm.schoolYear
+      }));
+      if (res.status == 200) {
+        this.$message.success(`修改第 ${this.idx + 1} 行成功`);
+      }
     },
     deleteRow(index, rows, row) {
-
+      this.$confirm('此操作不可逆, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        let temp = index+(this.currentPage-1)*this.pageSize;
+        rows.splice(temp, 1); // 前端假分页,如果后端做分页的话rows.splice(index, 1);
+        // let res = await this.$http.deleteSchool(this.$qs.stringify({schoolId: row.schoolId}));
+        this.$message.success('删除成功!');
+      }).catch(() => {
+        this.$message.error('已取消删除!');      
+      });
     }
   }
 }

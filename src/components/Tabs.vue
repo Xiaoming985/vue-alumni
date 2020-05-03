@@ -8,7 +8,7 @@
         </el-carousel-item>
       </el-carousel>
     </el-tab-pane>
-    <el-tab-pane v-for="(item,index) in tabList" :key="index" :name="item.name" closable>
+    <el-tab-pane v-for="item in tabList" :key="item.name" :name="item.name" closable>
       <span slot="label"><i :class="item.icon"></i>{{item.title}}</span>
       <keep-alive>
         <router-view></router-view>
@@ -88,4 +88,7 @@ export default {
   width: 620px;
   height: 300px;
 }
+// .el-tab-pane {
+//   height: 550px;
+// }
 </style>

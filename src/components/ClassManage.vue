@@ -38,7 +38,7 @@
     <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
       <el-form ref="editForm" v-model="editForm" label-width="100px">
         <el-form-item label="学校名称:">
-          <el-select size="small" v-model="editForm.schoolId" clearable filterable  placeholder="请选择" class="myselect" @change="selectSchool">
+          <el-select disabled size="small" v-model="editForm.schoolId" clearable filterable  placeholder="请选择" class="myselect" @change="selectSchool">
             <el-option v-for="item in schoolOptions" :key="item.schoolId" :label="item.schoolName" :value="item.schoolId"></el-option>
           </el-select>
         </el-form-item>
@@ -118,8 +118,16 @@ export default {
       this.editForm = row;
       this.editVisible = true;
     },
-    saveEdit() {
-
+    async saveEdit() {
+      this.editVisible = false;
+      let res = await this.$http.updateClass(this.$qs.stringify({
+        classId: this.editForm.classId,
+        className: this.editForm.className,
+        grade: this.editForm.grade
+      }));
+      if (res.status == 200) {
+        this.$message.success(`修改第 ${this.idx + 1} 行成功`);
+      }
     },
     deleteRow(index, rows, row) {
 

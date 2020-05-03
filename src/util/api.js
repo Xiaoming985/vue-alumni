@@ -61,6 +61,34 @@ const ALUMNI_API = {
   uploadHead: {
     method: 'post',
     url: '/userController/uploadHead'
+  },
+  updateSchool: {
+    method: 'post',
+    url: '/schoolController/updateSchool'
+  },
+  deleteSchool: {
+    method: 'post',
+    url: '/schoolController/deleteSchool'
+  },
+  updateClass: {
+    method: 'post',
+    url: '/classController/updateClass'
+  },
+  deleteClass: {
+    method: 'post',
+    url: '/classController/deleteClass'
+  },
+  getAllLeave: {
+    method: 'get',
+    url: '/leaveController/getAllLeave'
+  },
+  getLeaveByClassId: {
+    method: 'get',
+    url: '/leaveController/getLeaveByClassId'
+  },
+  deleteLeave: {
+    method: 'post',
+    url: '/leaveController/deleteLeave'
   }
 }
 
