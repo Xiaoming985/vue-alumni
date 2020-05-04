@@ -97,6 +97,26 @@ const ALUMNI_API = {
   deleteLog: {
     method: 'post',
     url: '/logController/deleteLog'
+  },
+  getAlbum: {
+    method: 'get',
+    url: '/albumController/getAlbum'
+  },
+  getUserAlbum: {
+    method: 'get',
+    url: '/albumController/getUserAlbum'
+  },
+  getClassAlbum: {
+    method: 'get',
+    url: '/albumController/getClassAlbum'
+  },
+  deleteAlbum: {
+    method: 'post',
+    url: '/albumController/deleteAlbum'
+  },
+  getImg: {
+    method: 'post',
+    url: '/albumController/getImg'
   }
 }
 
