@@ -41,11 +41,6 @@ const routes = [
         component: () => import('../components/LeaveManage.vue')
       },
       {
-        path: 'leave-detail',
-        name: 'leaveDetail',
-        component: () => import('../components/LeaveDetail.vue')
-      },
-      {
         path: 'log-manage',
         name: 'logManage',
         component: () => import('../components/LogManage.vue')

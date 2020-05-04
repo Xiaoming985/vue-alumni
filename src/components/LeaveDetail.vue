@@ -41,6 +41,7 @@ export default {
   components: {
     Pagination
   },
+  props: ["classId"],
   data() {
     return {
       inputKey: "",
@@ -64,13 +65,10 @@ export default {
       this.getLeaveByClassId();
     }
   },
-  created() {
-    this.getLeaveByClassId();
-  },
   methods: {
     async getLeaveByClassId() {
       let res = await this.$http.getLeaveByClassId({
-        classId: this.$route.query.classId,
+        classId: this.classId,
         start: (this.currentPage - 1) * this.pageSize,
         pageSize: this.pageSize
       });

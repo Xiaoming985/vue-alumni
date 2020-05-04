@@ -16,7 +16,7 @@
       <el-button type="danger" icon="el-icon-delete" size="small" @click="batchDelete">批量删除</el-button>
     </div>
     
-    <el-table border size="mini" style="width: 1186px" :header-cell-style="tableHeader" :cell-style="cellStyle" :data="tableData" 
+    <el-table border size="mini" style="width: 1206px" :header-cell-style="tableHeader" :cell-style="cellStyle" :data="tableData" 
       @selection-change="handleSelectionChange">
       <el-table-column align="center" prop="albumId" type="selection" width="55"></el-table-column>
       <el-table-column align="center" prop="userName" label="用户名" width="100"></el-table-column>
@@ -35,7 +35,8 @@
           <img :src="tableData[scope.$index].albumCover" alt="">
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="250">
+      <el-table-column align="center" prop="imgCount" label="图片数目" width="80"></el-table-column>
+      <el-table-column align="center" label="操作" width="190">
         <template slot-scope="scope">
           <el-button type="primary" size="small">查看详情</el-button>
           <el-button type="danger" icon="el-icon-delete" size="small"
