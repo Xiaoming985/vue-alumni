@@ -115,8 +115,12 @@ const ALUMNI_API = {
     url: '/albumController/deleteAlbum'
   },
   getImg: {
-    method: 'post',
+    method: 'get',
     url: '/albumController/getImg'
+  },
+  deleteImg: {
+    method: 'post',
+    url: '/albumController/deleteImg'
   }
 }
 

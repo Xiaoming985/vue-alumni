@@ -38,24 +38,30 @@
       <el-table-column align="center" prop="imgCount" label="图片数目" width="80"></el-table-column>
       <el-table-column align="center" label="操作" width="190">
         <template slot-scope="scope">
-          <el-button type="primary" size="small">查看详情</el-button>
+          <el-button type="primary" size="small" @click="toAlbumDetail(scope.row)">查看详情</el-button>
           <el-button type="danger" icon="el-icon-delete" size="small"
             @click="deleteAlbum(scope.$index, tableData, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <Pagination :currentPage="currentPage" :pageSize="pageSize" :currentTotal="currentTotal"></Pagination>
+
+    <el-dialog title="相册详情" :visible.sync="editVisible" width="70%" @close="closeDialog">
+      <AlbumDetail :albumId="albumId" ref="albumDetail"></AlbumDetail>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import Condition from "@/components/Condition.vue";
 import Pagination from "@/components/Pagination.vue";
+import AlbumDetail from "@/components/AlbumDetail.vue";
 import { mapGetters } from "vuex";
 export default {
   components: {
     Condition,
-    Pagination
+    Pagination,
+    AlbumDetail
   },
   data() {
     return {
@@ -66,7 +72,9 @@ export default {
       pageSize: 5,
       currentTotal: 0,
       tableData: [],
-      selectedData: []
+      selectedData: [],
+      editVisible: false,
+      albumId: ""
     };
   },
   computed: {
@@ -136,6 +144,13 @@ export default {
         this.$message.error('已取消删除!');        
       });
     },
+    toAlbumDetail(row) {
+      this.albumId = row.albumId;
+      this.editVisible = true;
+      this.$nextTick(() => {
+        this.$refs.albumDetail.getImg();
+      })
+    },
     deleteAlbum(index, rows, row) {
       this.$confirm('此操作不可逆, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -149,6 +164,10 @@ export default {
       }).catch(() => {
         this.$message.error('已取消删除!');        
       });
+    },
+    closeDialog() {
+      this.$refs.albumDetail.checkList = [];
+      this.$refs.albumDetail.hidden = true;
     }
   }
 };

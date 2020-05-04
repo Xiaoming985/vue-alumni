@@ -22,23 +22,29 @@
       <el-table-column align="center" prop="logTime" label="发布时间" width="200"></el-table-column>
       <el-table-column align="center" label="操作" width="250">
         <template slot-scope="scope">
-          <el-button type="primary" size="small">查看详情</el-button>
+          <el-button type="primary" size="small" @click="toLogDetail(scope.row)">查看详情</el-button>
           <el-button type="danger" icon="el-icon-delete" size="small" @click="deleteLog(scope.$index, tableData, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <Pagination :currentPage="currentPage" :pageSize="pageSize" :currentTotal="currentTotal"></Pagination>
+
+    <el-dialog title="日志详情" :visible.sync="editVisible" width="70%">
+      <LogDetail :logId="logId" ref="logDetail"></LogDetail>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import Condition from "@/components/Condition.vue";
 import Pagination from "@/components/Pagination.vue";
+import LogDetail from "@/components/LogDetail.vue";
 import { mapGetters } from "vuex";
 export default {
   components: {
     Condition,
-    Pagination
+    Pagination,
+    LogDetail
   },
   data() {
     return {
@@ -48,7 +54,9 @@ export default {
       selectedData: [],
       currentPage: 1,
       pageSize: 5,
-      currentTotal: 0
+      currentTotal: 0,
+      editVisible: false,
+      logId: ''
     };
   },
   computed: {
@@ -111,6 +119,13 @@ export default {
       }).catch(() => {
         this.$message.error('已取消删除!');
       });
+    },
+    toLogDetail(row) {
+      this.logId = row.logId;
+      this.editVisible = true;
+      this.$nextTick(() => {
+        this.$refs.logDetail.getLog();
+      })
     },
     async deleteLog(index, rows, row) {
       this.$confirm('此操作不可逆, 是否继续?', '提示', {
