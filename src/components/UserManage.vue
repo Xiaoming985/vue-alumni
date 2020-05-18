@@ -38,6 +38,11 @@
           <el-tag v-else-if="scope.row.tag === 2" type="success">已认证</el-tag>
         </template>
       </el-table-column>
+      <el-table-column align="center" label="可供证明的图片" width="120">
+        <template slot-scope="scope">
+          <img :src="tableData[scope.$index].academic" alt="" @click="checkImg(tableData[scope.$index].academic)">
+        </template>
+      </el-table-column>
       <el-table-column align="center" sortable prop="schoolName" label="学校" width="120"></el-table-column>
       <el-table-column align="center" sortable prop="grade" label="年级" width="80"></el-table-column>
       <el-table-column align="center" sortable prop="className" label="班级" width="80"></el-table-column>
@@ -98,6 +103,9 @@
         <el-button type="primary" @click="saveEdit">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog title="可供证明的图片材料" width="30%" :visible.sync="imgVisible">
+      <img src="" alt="" ref="bigImg">
+    </el-dialog>
   </div>
 </template>
 
@@ -123,6 +131,7 @@ export default {
       pageSize: 5,
       currentTotal: 0,
       editVisible: false,
+      imgVisible: false,
       editForm: {
         userId: '',
         name: '',
@@ -181,6 +190,7 @@ export default {
         userId: row.userId,
         tag: 2
       }));
+      this.$message.success(`审核通过`);
       this.getUserInfo(this.userInfo);
     },
     // 审核不通过
@@ -190,6 +200,7 @@ export default {
         classId: 0,
         tag: 0
       }));
+      this.$message.error(`审核不通过`);
       this.getUserInfo(this.userInfo);
     },
     // 编辑操作
@@ -269,6 +280,12 @@ export default {
       }).catch(() => {
         this.$message.error('已取消删除!');        
       });
+    },
+    checkImg(src) {
+      this.imgVisible = true;
+      this.$nextTick(() => {
+        this.$refs.bigImg.src = src;
+      });
     }
   },
 }
@@ -289,6 +306,22 @@ export default {
 .el-dialog{
   .el-input {
     width: 205px;
+  }
+}
+
+.el-table {
+  img {
+    width: 60px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.el-dialog {
+  img {
+    width: 400px;
+    margin: 0 auto;
   }
 }
 </style>
