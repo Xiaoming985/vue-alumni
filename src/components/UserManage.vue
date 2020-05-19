@@ -40,7 +40,7 @@
       </el-table-column>
       <el-table-column align="center" label="可供证明的图片" width="120">
         <template slot-scope="scope">
-          <img :src="tableData[scope.$index].academic" alt="" @click="checkImg(tableData[scope.$index].academic)">
+          <img :src="scope.row.academic" alt="" @click="checkImg(scope.row.academic)">
         </template>
       </el-table-column>
       <el-table-column align="center" sortable prop="schoolName" label="学校" width="120"></el-table-column>
@@ -237,7 +237,7 @@ export default {
         type: 'warning'
       }).then(async () => {
         let temp = index+(this.currentPage-1)*this.pageSize;
-        rows.splice(temp, 1); // 前端假分页,如果后端做分页的话rows.splice(index, 1);
+        rows.splice(temp, 1); // 前端分页,如果后端做分页的话rows.splice(index, 1);
         let res = await this.$http.deleteUser(this.$qs.stringify({userId: row.userId}));
         this.$message.success('删除成功!');
       }).catch(() => {
@@ -281,6 +281,7 @@ export default {
         this.$message.error('已取消删除!');        
       });
     },
+    // 看大图
     checkImg(src) {
       this.imgVisible = true;
       this.$nextTick(() => {
