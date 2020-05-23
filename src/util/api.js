@@ -62,6 +62,10 @@ const ALUMNI_API = {
     method: 'post',
     url: '/userController/uploadHead'
   },
+  addSchool: {
+    method: 'post',
+    url: '/schoolController/addSchool'
+  },
   updateSchool: {
     method: 'post',
     url: '/schoolController/updateSchool'
@@ -69,6 +73,10 @@ const ALUMNI_API = {
   deleteSchool: {
     method: 'post',
     url: '/schoolController/deleteSchool'
+  },
+  addClass: {
+    method: 'post',
+    url: '/classController/addClass'
   },
   updateClass: {
     method: 'post',

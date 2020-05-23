@@ -38,6 +38,20 @@
         <el-button type="primary" @click="saveEdit">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog title="新增学校" :visible.sync="addVisible" width="30%">
+      <el-form ref="addForm" v-model="addForm" label-width="100px">
+        <el-form-item label="学校名称:">
+          <el-input size="small" v-model="addForm.schoolName"></el-input>
+        </el-form-item>
+        <el-form-item label="建校年份:">
+          <el-input size="small" v-model="addForm.schoolYear"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveSchool">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -51,6 +65,8 @@ export default {
       selectedData: [], // 批量选择框
       editVisible: false,
       editForm: [],
+      addForm: [],
+      addVisible: false
     };
   },
   computed: {
@@ -76,12 +92,18 @@ export default {
       this.selectedData = data;
     },
     addSchool() {
-      this.editForm = [];
-      this.editVisible = true;
+      this.addForm = [];
+      this.addVisible = true;
     },
-    // 批量删除
-    batchDelete() {
-
+    async saveSchool() {
+      this.addVisible = false;
+      let res = await this.$http.addSchool(this.$qs.stringify({
+        schoolName: this.addForm.schoolName,
+        schoolYear: this.addForm.schoolYear
+      }));
+      if (res.status == 200) {
+        this.getSchool();
+      }
     },
     handleEdit(index, row) {
       this.idx = index; // 用于保存时,提示修改了第几行
@@ -110,10 +132,34 @@ export default {
       }).then(async () => {
         let temp = index+(this.currentPage-1)*this.pageSize;
         rows.splice(temp, 1); // 前端假分页,如果后端做分页的话rows.splice(index, 1);
-        // let res = await this.$http.deleteSchool(this.$qs.stringify({schoolId: row.schoolId}));
+        let res = await this.$http.deleteSchool(this.$qs.stringify({schoolId: row.schoolId}));
         this.$message.success('删除成功!');
       }).catch(() => {
         this.$message.error('已取消删除!');      
+      });
+    },
+    // 批量删除
+    batchDelete() {
+      let arr = [];
+      let that = this;
+      this.$confirm('此操作不可逆, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        this.selectedData.forEach((item,index) => {
+          arr.push(item.schoolId);
+          that.tableData.forEach(async (item2, index2) => {
+            if (item2 === item) {
+              that.tableData.splice(index2, 1);
+            }
+          })
+        });
+        let str = arr.join(); // 数组转化成字符串,默认以 , 隔开
+        let res = await this.$http.deleteSchool(this.$qs.stringify({schoolId: str}));
+        this.$message.success('删除成功!');
+      }).catch(() => {
+        this.$message.error('已取消删除!');        
       });
     }
   }

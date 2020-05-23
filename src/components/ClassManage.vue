@@ -38,7 +38,7 @@
     <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
       <el-form ref="editForm" v-model="editForm" label-width="100px">
         <el-form-item label="学校名称:">
-          <el-select disabled size="small" v-model="editForm.schoolId" clearable filterable  placeholder="请选择" class="myselect" @change="selectSchool">
+          <el-select disabled size="small" v-model="editForm.schoolId" clearable filterable  placeholder="请选择" class="myselect">
             <el-option v-for="item in schoolOptions" :key="item.schoolId" :label="item.schoolName" :value="item.schoolId"></el-option>
           </el-select>
         </el-form-item>
@@ -52,6 +52,25 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="editVisible = false">取 消</el-button>
         <el-button type="primary" @click="saveEdit">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="新建班级" :visible.sync="addVisible" width="30%">
+      <el-form ref="editForm" v-model="addForm" label-width="100px">
+        <el-form-item label="学校名称:">
+          <el-select size="small" v-model="addForm.schoolId" clearable filterable  placeholder="请选择" class="myselect" @change="selectSchool">
+            <el-option v-for="item in schoolOptions" :key="item.schoolId" :label="item.schoolName" :value="item.schoolId"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="年级:">
+          <el-input size="small" v-model="addForm.grade"></el-input>
+        </el-form-item>
+        <el-form-item label="班级名称:">
+          <el-input size="small" v-model="addForm.className"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveClass">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -75,7 +94,9 @@ export default {
       grade: '', // 选择的年级
       gradeOptions: [],
       editForm: [],
-      editVisible: false
+      editVisible: false,
+      addForm: [],
+      addVisible: false
     };
   },
   computed: {
@@ -107,11 +128,21 @@ export default {
       this.selectedData = data;
     },
     addClass() {
-      this.editForm = [];
-      this.editVisible = true;
+      this.addForm = [];
+      this.addVisible = true;
     },
-    batchDelete() {
-
+    async saveClass() {
+      this.addVisible = false;
+      let res = await this.$http.addClass(this.$qs.stringify({
+        schoolId: this.addForm.schoolId,
+        grade: this.addForm.grade,
+        className: this.addForm.className
+      }));
+      if (res.status == 200) {
+        this.getClass().then(res => {
+          this.tableData = res.data;
+        });
+      }
     },
     handleEdit(index, row) {
       this.idx = index; // 用于保存时,提示修改了第几行
@@ -130,7 +161,40 @@ export default {
       }
     },
     deleteRow(index, rows, row) {
-
+      this.$confirm('此操作不可逆, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        rows.splice(index, 1);
+        let res = await this.$http.deleteClass(this.$qs.stringify({classId: row.classId}));
+        this.$message.success('删除成功!');
+      }).catch(() => {
+        this.$message.error('已取消删除!');        
+      });
+    },
+    batchDelete() {
+      let arr = [];
+      let that = this;
+      this.$confirm('此操作不可逆, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        this.selectedData.forEach((item,index) => {
+          arr.push(item.classId);
+          that.tableData.forEach(async (item2, index2) => {
+            if (item2 === item) {
+              that.tableData.splice(index2, 1);
+            }
+          })
+        });
+        let str = arr.join(); // 数组转化成字符串,默认以 , 隔开
+        let res = await this.$http.deleteClass(this.$qs.stringify({classId: str}));
+        this.$message.success('删除成功!');
+      }).catch(() => {
+        this.$message.error('已取消删除!');        
+      });
     }
   }
 }
