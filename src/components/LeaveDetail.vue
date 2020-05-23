@@ -69,6 +69,10 @@ export default {
     async getLeaveByClassId() {
       let res = await this.$http.getLeaveByClassId({
         classId: this.classId,
+        userId: "",
+        content: "",
+        userName: "",
+        phone: "",
         start: (this.currentPage - 1) * this.pageSize,
         pageSize: this.pageSize
       });
@@ -82,8 +86,28 @@ export default {
         this.currentTotal = res.data[0].leaveCount;
       }
     },
-    handleSearch() {
-
+    async handleSearch() {
+      this.currentPage = 1;
+      let res = await this.$http.getLeaveByClassId({
+        classId: this.classId,
+        userId: "",
+        content: this.inputKey,
+        userName: this.select == "1" ? this.input : "",
+        phone: this.select == "2" ? this.input : "",
+        start: (this.currentPage - 1) * this.pageSize,
+        pageSize: this.pageSize
+      });
+      // console.log(res);
+      if (res.status == 200) {
+        // this.tableData = [];
+        this.tableData = res.data;
+        this.tableData.forEach(item => {
+          if (item.images) {
+            item.images = item.images.trim().split(" ");
+          }
+        })
+        this.currentTotal = res.data[0].leaveCount;
+      }
     },
     handleSelectionChange(data) {
       this.selectedData = data;
