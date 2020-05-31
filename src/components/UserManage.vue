@@ -191,7 +191,7 @@ export default {
         tag: 2
       }));
       this.$message.success(`审核通过`);
-      this.getUserInfo(this.userInfo);
+      this.handleSearch();
     },
     // 审核不通过
     async noPass(row) { 
@@ -201,7 +201,7 @@ export default {
         tag: 0
       }));
       this.$message.error(`审核不通过`);
-      this.getUserInfo(this.userInfo);
+      this.handleSearch();
     },
     // 编辑操作
     handleEdit(index, row) {
